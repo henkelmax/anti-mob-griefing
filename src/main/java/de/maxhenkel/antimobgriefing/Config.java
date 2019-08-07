@@ -22,9 +22,9 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue DISABLE_CREEPER_EXPLOSION_BLOCK_DAMAGE;
     public static ForgeConfigSpec.BooleanValue DISABLE_CREEPER_DAMAGE;
     public static ForgeConfigSpec.BooleanValue CREEPER_FIREWORK;
-    public static ForgeConfigSpec.ConfigValue<List<String>> CREEPER_FIREWORK_COLORS;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> CREEPER_FIREWORK_COLORS;
     public static ForgeConfigSpec.BooleanValue CREEPER_POTION_EFFECTS_ENABLED;
-    public static ForgeConfigSpec.ConfigValue<List<String>> CREEPER_POTION_EFFECTS;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> CREEPER_POTION_EFFECTS;
     public static ForgeConfigSpec.BooleanValue CREEPER_KNOCKBACK;
     public static ForgeConfigSpec.DoubleValue CREEPER_KNOCKBACK_FACTOR;
     public static ForgeConfigSpec.BooleanValue DISABLE_ENDERMEN_BLOCK_PICKUP;
@@ -75,14 +75,14 @@ public class Config {
 
             CREEPER_FIREWORK_COLORS = builder
                     .comment("The colors that the firework contains")
-                    .define("creeper.firework.colors", Arrays.asList(DyeColor.values()).stream().map(dyeColor -> dyeColor.getTranslationKey()).collect(Collectors.toList()));
+                    .defineList("creeper.firework.colors", Arrays.asList(DyeColor.values()).stream().map(dyeColor -> dyeColor.getTranslationKey()).collect(Collectors.toList()), Objects::nonNull);
 
             CREEPER_POTION_EFFECTS_ENABLED = builder
                     .define("creeper.lingering_effects.enabled", false);
 
             CREEPER_POTION_EFFECTS = builder
                     .comment("The potion effects that the creeper spawns upon exploding")
-                    .define("creeper.lingering_effects.effects", Arrays.asList(new EffectInstance(Effects.NAUSEA, 200, 1)).stream().map(effectInstance -> NBTUtils.serializeNBT(effectInstance.write(new CompoundNBT()))).collect(Collectors.toList()));
+                    .defineList("creeper.lingering_effects.effects", Arrays.asList(new EffectInstance(Effects.NAUSEA, 200, 1)).stream().map(effectInstance -> NBTUtils.serializeNBT(effectInstance.write(new CompoundNBT()))).collect(Collectors.toList()), Objects::nonNull);
 
             CREEPER_KNOCKBACK = builder
                     .define("creeper.knockback.enabled", false);
