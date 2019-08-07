@@ -83,6 +83,7 @@ public class Config {
                     .defineList("creeper.firework.colors", Arrays.asList(DyeColor.values()).stream().map(dyeColor -> dyeColor.getTranslationKey()).collect(Collectors.toList()), Objects::nonNull);
 
             CREEPER_POTION_EFFECTS_ENABLED = builder
+                    .comment("If creepers should spawn a lingering effect cloud upon exploding")
                     .define("creeper.lingering_effects.enabled", false);
 
             CREEPER_POTION_EFFECTS = builder
@@ -90,9 +91,11 @@ public class Config {
                     .defineList("creeper.lingering_effects.effects", Arrays.asList(new EffectInstance(Effects.NAUSEA, 200, 1)).stream().map(effectInstance -> NBTUtils.serializeNBT(effectInstance.write(new CompoundNBT()))).collect(Collectors.toList()), Objects::nonNull);
 
             CREEPER_KNOCKBACK = builder
+                    .comment("If players should be knocked back when a Creeper explodes")
                     .define("creeper.knockback.enabled", false);
 
             CREEPER_KNOCKBACK_FACTOR = builder
+                    .comment("The amount of speed applied to the player when knocked back")
                     .defineInRange("creeper.knockback.factor", 2.5D, 0D, 5D);
 
             DISABLE_ENDERMEN_BLOCK_PICKUP = builder
@@ -121,7 +124,7 @@ public class Config {
 
             DISABLE_WITHER_BLOCK_DAMAGE = builder
                     .comment("Disable Withers breaking blocks")
-                    .define("wither.disable_block_damage", false);
+                    .define("wither.disable_block_damage", true);
 
             DISABLE_SNOW_GOLEM_SNOW_PLACING = builder
                     .comment("Disable Snow Golems placing snow layers")
