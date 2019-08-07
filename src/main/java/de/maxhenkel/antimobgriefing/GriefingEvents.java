@@ -82,7 +82,7 @@ public class GriefingEvents {
 
     private boolean onLivingGrief(EntityMobGriefingEvent event, LivingEntity entity) {
         if (!entity.isAlive()) {
-            if (Config.DISABLE_PLAYER_WITHER_ROSE_PLACING.get()) {
+            if (Config.DISABLE_WITHER_ROSE_PLACING.get()) {
                 event.setResult(Event.Result.DENY);
                 return true;
             }

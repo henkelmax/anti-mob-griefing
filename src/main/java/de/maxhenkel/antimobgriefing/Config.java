@@ -36,7 +36,7 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue DISABLE_WITHER_BLOCK_DAMAGE;
     public static ForgeConfigSpec.BooleanValue DISABLE_SNOW_GOLEM_SNOW_PLACING;
     public static ForgeConfigSpec.BooleanValue DISABLE_BLAZE_FIRE;
-    public static ForgeConfigSpec.BooleanValue DISABLE_PLAYER_WITHER_ROSE_PLACING;
+    public static ForgeConfigSpec.BooleanValue DISABLE_WITHER_ROSE_PLACING;
     public static ForgeConfigSpec.BooleanValue DISABLE_GHAST_FIREBALL_BLOCK_DAMAGE;
     public static ForgeConfigSpec.BooleanValue DISABLE_VILLAGER_CROP_FARIMING;
     public static ForgeConfigSpec.BooleanValue DISABLE_SHEEP_GRASS_EATING;
@@ -55,6 +55,11 @@ public class Config {
             DISABLE_CROP_TRAMPLING = builder
                     .comment("Disable crop trampling")
                     .define("disable_crop_trampling", false);
+
+
+            DISABLE_WITHER_ROSE_PLACING = builder
+                    .comment("Disable placing a Wither Rose when a mob dies from a wither")
+                    .define("disable_wither_rose_placing", false);
 
             /*
             DISABLE_EGG_TRAMPLING = builder
@@ -126,10 +131,6 @@ public class Config {
                     .comment("Disable Blazes creating fire with fireballs")
                     .define("blaze.disable_fire", false);
 
-            DISABLE_PLAYER_WITHER_ROSE_PLACING = builder
-                    .comment("Disable placing a Wither Rose when a player dies")
-                    .define("player.disable_wither_rose_placing", false);
-
             DISABLE_GHAST_FIREBALL_BLOCK_DAMAGE = builder
                     .comment("Disable Ghast fireball block damage")
                     .define("ghast.disable_fireball_block_damage", false);
@@ -148,11 +149,11 @@ public class Config {
         }
     }
 
-    public static List<EffectInstance> getEffects(List<String> list) {
+    public static List<EffectInstance> getEffects(List<? extends String> list) {
         return list.stream().map(s -> EffectInstance.read(NBTUtils.deserializeNBT(s))).collect(Collectors.toList());
     }
 
-    public static List<Integer> getDyeColors(List<String> list) {
+    public static List<Integer> getDyeColors(List<? extends String> list) {
         return list.stream().map(value -> DyeColor.byTranslationKey(value, null)).filter(Objects::nonNull).map(value -> value.getFireworkColor()).collect(Collectors.toList());
     }
 
