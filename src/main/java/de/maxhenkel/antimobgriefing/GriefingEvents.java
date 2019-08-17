@@ -22,7 +22,10 @@ import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.network.NetworkDirection;
+
+import java.lang.reflect.Field;
 
 public class GriefingEvents {
 
@@ -91,7 +94,20 @@ public class GriefingEvents {
     }
 
     private void onCreeperGrief(EntityMobGriefingEvent event, CreeperEntity creeper) {
-        if (!creeper.hasIgnited()) {
+        try {
+            Field field;
+            try {
+                field = ObfuscationReflectionHelper.findField(CreeperEntity.class, "field_70833_d");
+            } catch (ObfuscationReflectionHelper.UnableToFindFieldException e) {
+                field = ObfuscationReflectionHelper.findField(CreeperEntity.class, "timeSinceIgnited");
+            }
+            int time = (int) field.get(creeper);
+            if (time <= 0) {
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            event.setResult(Event.Result.DENY);
             return;
         }
 
