@@ -2,7 +2,6 @@ package de.maxhenkel.antimobgriefing.net;
 
 import de.maxhenkel.antimobgriefing.Config;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.DyeColor;
 import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -12,10 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class MessageSpawnFireworks implements Message<MessageSpawnFireworks> {
 
@@ -45,7 +41,7 @@ public class MessageSpawnFireworks implements Message<MessageSpawnFireworks> {
 
         CompoundNBT explosion = new CompoundNBT();
         FireworkRocketItem.Shape shape = FireworkRocketItem.Shape.SMALL_BALL;
-        explosion.putByte("Type", (byte) shape.func_196071_a());
+        explosion.putByte("Type", (byte) shape.getIndex());
         List<Integer> colors = Config.getDyeColors(Config.CREEPER_FIREWORK_COLORS.get());
         explosion.putIntArray("Colors", colors);
         explosion.putBoolean("Flicker", true);
