@@ -1,23 +1,22 @@
 package de.maxhenkel.antimobgriefing.net;
 
-import de.maxhenkel.antimobgriefing.Config;
+import de.maxhenkel.antimobgriefing.Main;
+import de.maxhenkel.corelib.net.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import java.util.List;
-
 public class MessageSpawnFireworks implements Message<MessageSpawnFireworks> {
 
-    private Vec3d pos;
+    private Vector3d pos;
 
-    public MessageSpawnFireworks(Vec3d pos) {
+    public MessageSpawnFireworks(Vector3d pos) {
         this.pos = pos;
     }
 
@@ -25,8 +24,8 @@ public class MessageSpawnFireworks implements Message<MessageSpawnFireworks> {
     }
 
     @Override
-    public void executeServerSide(NetworkEvent.Context context) {
-
+    public Dist getExecutingSide() {
+        return Dist.CLIENT;
     }
 
     @Override
@@ -42,8 +41,7 @@ public class MessageSpawnFireworks implements Message<MessageSpawnFireworks> {
         CompoundNBT explosion = new CompoundNBT();
         FireworkRocketItem.Shape shape = FireworkRocketItem.Shape.SMALL_BALL;
         explosion.putByte("Type", (byte) shape.getIndex());
-        List<Integer> colors = Config.getDyeColors(Config.CREEPER_FIREWORK_COLORS.get());
-        explosion.putIntArray("Colors", colors);
+        explosion.putIntArray("Colors", Main.SERVER_CONFIG.creeperColors);
         explosion.putBoolean("Flicker", true);
         explosions.add(explosion);
 
@@ -54,7 +52,7 @@ public class MessageSpawnFireworks implements Message<MessageSpawnFireworks> {
 
     @Override
     public MessageSpawnFireworks fromBytes(PacketBuffer buf) {
-        pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        pos = new Vector3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
         return this;
     }
 

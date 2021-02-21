@@ -1,4 +1,15 @@
-# Anti Mobgriefing
+# Anti Mobgriefing ![](http://cf.way2muchnoise.eu/full_449140_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/449140.svg)
+
+## Links
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/anti-mob-griefing)
+- [ModRepo](https://modrepo.de/minecraft/antimobgriefing/overview)
+- [GitHub](https://github.com/henkelmax/anti-mob-griefing)
+- [FAQ](https://modrepo.de/minecraft/antimobgriefing/faq)
+- [Credits](https://modrepo.de/minecraft/antimobgriefing/credits)
+
+---
+
+This mod adds fully customizable mob griefing rules.
 
 ## Config Options
 

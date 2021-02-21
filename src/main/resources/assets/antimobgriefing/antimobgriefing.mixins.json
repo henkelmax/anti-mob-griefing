@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "de.maxhenkel.antimobgriefing.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "antimobgriefing.refmap.json",
+  "minVersion": "0.8",
+  "mixins": [
+    "LivingEntityMixin",
+    "TurtleEggMixin",
+    "BreakBlockGoalMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
