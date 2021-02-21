@@ -1,11 +1,13 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.maxhenkel.de/repository/public' }
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.2'
     }
 }
 
@@ -15,6 +17,7 @@ plugins {
 }
 
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'forge-update'
 
 version = mod_version
 group = mod_packagename
@@ -74,7 +77,14 @@ processResources {
 }
 
 curseforge {
-    apiKey = System.env.CURSEFORGE_API_KEY != null ? System.env.CURSEFORGE_API_KEY : file('curseforge_api_key.txt').text
+    def apiKeyFile = file('curseforge_api_key.txt')
+    if (System.env.CURSEFORGE_API_KEY != null) {
+        apiKey = System.env.CURSEFORGE_API_KEY;
+    } else if (apiKeyFile.exists()) {
+        apiKey = apiKeyFile.text
+    } else {
+        apiKey = ""
+    }
     project {
         id = curse_id
         changelogType = 'markdown'
@@ -85,6 +95,30 @@ curseforge {
             displayName = "[${mod_minecraft_version}] ${mod_name} ${mod_version}"
         }
     }
+}
+
+forgeUpdate {
+    def messages = []
+    file('changelog.md').eachLine { String line ->
+        if (line.trim().startsWith('-')) {
+            messages.add(line.replaceFirst('-', '').trim())
+        }
+    }
+    def apiKeyFile = file('forge_update_api_key.txt')
+    if (System.env.FORGE_UPDATE_API_KEY != null) {
+        apiKey = System.env.FORGE_UPDATE_API_KEY;
+    } else if (apiKeyFile.exists()) {
+        apiKey = apiKeyFile.text
+    } else {
+        apiKey = ""
+    }
+    serverURL = 'https://update.maxhenkel.de/'
+    modID = mod_id
+    gameVersion = mod_minecraft_version
+    modVersion = mod_version
+    updateMessages = messages
+    releaseType = curse_release_type
+    tags = recommended == 'true' ? ['recommended'] : []
 }
 
 javadoc {
