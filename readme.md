@@ -1,4 +1,4 @@
-# Anti Mobgriefing ![](http://cf.way2muchnoise.eu/full_449140_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/449140.svg)
+# Anti Mob Griefing ![](http://cf.way2muchnoise.eu/full_449140_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/449140.svg)
 
 ## Links
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/anti-mob-griefing)
