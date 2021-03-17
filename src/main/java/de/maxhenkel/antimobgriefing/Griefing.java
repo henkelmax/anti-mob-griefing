@@ -97,35 +97,35 @@ public class Griefing {
 
         if (Main.SERVER_CONFIG.disableCreeperDamage.get()) {
             CompoundNBT compoundNBT = new CompoundNBT();
-            creeper.writeAdditional(compoundNBT);
+            creeper.addAdditionalSaveData(compoundNBT);
             compoundNBT.putByte("ExplosionRadius", (byte) 0);
-            creeper.readAdditional(compoundNBT);
+            creeper.readAdditionalSaveData(compoundNBT);
         }
 
         if (Main.SERVER_CONFIG.creeperFirework.get()) {
-            if (creeper.world instanceof ServerWorld) {
-                ServerWorld world = (ServerWorld) creeper.world;
-                Vector3d pos = creeper.getPositionVec().add(0D, creeper.getEyeHeight(), 0D);
+            if (creeper.level instanceof ServerWorld) {
+                ServerWorld world = (ServerWorld) creeper.level;
+                Vector3d pos = creeper.position().add(0D, creeper.getEyeHeight(), 0D);
                 MessageSpawnFireworks msg = new MessageSpawnFireworks(pos);
 
-                world.getPlayers(serverPlayerEntity -> Math.sqrt(serverPlayerEntity.getDistanceSq(pos)) < 128D).stream().forEach(serverPlayerEntity -> {
-                    Main.SIMPLE_CHANNEL.sendTo(msg, serverPlayerEntity.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+                world.getPlayers(serverPlayerEntity -> Math.sqrt(serverPlayerEntity.distanceToSqr(pos)) < 128D).stream().forEach(serverPlayerEntity -> {
+                    Main.SIMPLE_CHANNEL.sendTo(msg, serverPlayerEntity.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
                 });
             }
         }
 
         if (Main.SERVER_CONFIG.creeperPotionEffectsEnabled.get()) {
-            Main.SERVER_CONFIG.creeperEffects.forEach(creeper::addPotionEffect);
+            Main.SERVER_CONFIG.creeperEffects.forEach(creeper::addEffect);
         }
 
         if (Main.SERVER_CONFIG.creeperKnockback.get()) {
-            creeper.world.getEntitiesWithinAABB(ServerPlayerEntity.class, creeper.getBoundingBox().grow(4D)).stream().forEach(player -> {
-                if (player.abilities.isFlying) {
+            creeper.level.getEntitiesOfClass(ServerPlayerEntity.class, creeper.getBoundingBox().inflate(4D)).stream().forEach(player -> {
+                if (player.abilities.flying) {
                     return;
                 }
-                Vector3d motionVec = player.getPositionVec().subtract(creeper.getPositionVec()).normalize().scale(Main.SERVER_CONFIG.creeperKnockbackFactor.get()).add(player.getMotion()).add(0D, 0.25D, 0D);
-                Main.SIMPLE_CHANNEL.sendTo(new MessageMotion(motionVec), player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
-                player.setMotion(motionVec);
+                Vector3d motionVec = player.position().subtract(creeper.position()).normalize().scale(Main.SERVER_CONFIG.creeperKnockbackFactor.get()).add(player.getDeltaMovement()).add(0D, 0.25D, 0D);
+                Main.SIMPLE_CHANNEL.sendTo(new MessageMotion(motionVec), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+                player.setDeltaMovement(motionVec);
             });
         }
     }

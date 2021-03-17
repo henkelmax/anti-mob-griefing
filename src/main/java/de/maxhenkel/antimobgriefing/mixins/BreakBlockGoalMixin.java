@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class BreakBlockGoalMixin extends MoveToBlockGoal {
 
     @Shadow
-    private MobEntity entity;
+    private MobEntity removerMob;
 
     public BreakBlockGoalMixin(CreatureEntity creature, double speedIn, int length) {
         super(creature, speedIn, length);
@@ -27,10 +27,10 @@ public abstract class BreakBlockGoalMixin extends MoveToBlockGoal {
         super(creatureIn, speed, length, p_i48796_5_);
     }
 
-    @Inject(method = "shouldExecute", at = @At(value = "FIELD"), cancellable = true)
+    @Inject(method = "canUse", at = @At(value = "FIELD"), cancellable = true)
     public void shouldExecute(CallbackInfoReturnable<Boolean> info) {
-        if (entity.world.getBlockState(destinationBlock).getBlock().equals(Blocks.TURTLE_EGG)) {
-            EggTrampleEvent event = new EggTrampleEvent(entity.world, entity);
+        if (removerMob.level.getBlockState(blockPos).getBlock().equals(Blocks.TURTLE_EGG)) {
+            EggTrampleEvent event = new EggTrampleEvent(removerMob.level, removerMob);
             MinecraftForge.EVENT_BUS.post(event);
             if (event.isCanceled()) {
                 info.setReturnValue(false);

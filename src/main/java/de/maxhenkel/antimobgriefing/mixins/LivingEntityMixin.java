@@ -26,7 +26,7 @@ public abstract class LivingEntityMixin extends Entity {
         if (!(entity instanceof WitherEntity)) {
             return;
         }
-        WitherRosePlaceEvent event = new WitherRosePlaceEvent(world, getPosition(), (WitherEntity) entity);
+        WitherRosePlaceEvent event = new WitherRosePlaceEvent(level, blockPosition(), (WitherEntity) entity);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             info.cancel();

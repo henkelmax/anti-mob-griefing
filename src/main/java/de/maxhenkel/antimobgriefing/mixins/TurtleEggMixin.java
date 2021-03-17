@@ -18,7 +18,7 @@ public abstract class TurtleEggMixin extends Block {
         super(properties);
     }
 
-    @Inject(method = "canTrample", at = @At(value = "RETURN"), cancellable = true)
+    @Inject(method = "canDestroyEgg", at = @At(value = "RETURN"), cancellable = true)
     public void canTrample(World world, Entity trampler, CallbackInfoReturnable<Boolean> info) {
         if (!info.getReturnValue()) {
             return;

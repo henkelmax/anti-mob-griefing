@@ -74,7 +74,7 @@ public class ServerConfig extends ConfigBase {
 
         creeperFireworkColors = builder
                 .comment("The colors that the firework contains")
-                .defineList("creeper.firework.colors", Arrays.asList(DyeColor.values()).stream().map(dyeColor -> dyeColor.getTranslationKey()).collect(Collectors.toList()), Objects::nonNull);
+                .defineList("creeper.firework.colors", Arrays.asList(DyeColor.values()).stream().map(dyeColor -> dyeColor.getName()).collect(Collectors.toList()), Objects::nonNull);
 
         creeperPotionEffectsEnabled = builder
                 .comment("If creepers should spawn a lingering effect cloud upon exploding")
@@ -82,7 +82,7 @@ public class ServerConfig extends ConfigBase {
 
         creeperPotionEffects = builder
                 .comment("The potion effects that the creeper spawns upon exploding")
-                .defineList("creeper.lingering_effects.effects", Arrays.asList(new EffectInstance(Effects.NAUSEA, 200, 1)).stream().map(effectInstance -> effectInstance.write(new CompoundNBT()).toString()).collect(Collectors.toList()), Objects::nonNull);
+                .defineList("creeper.lingering_effects.effects", Arrays.asList(new EffectInstance(Effects.CONFUSION, 200, 1)).stream().map(effectInstance -> effectInstance.save(new CompoundNBT()).toString()).collect(Collectors.toList()), Objects::nonNull);
 
         creeperKnockback = builder
                 .comment("If players should be knocked back when a Creeper explodes")
@@ -154,16 +154,16 @@ public class ServerConfig extends ConfigBase {
     }
 
     public static List<EffectInstance> getEffects(List<? extends String> list) {
-        return list.stream().map(s -> EffectInstance.read(deserializeNBT(s))).collect(Collectors.toList());
+        return list.stream().map(s -> EffectInstance.load(deserializeNBT(s))).collect(Collectors.toList());
     }
 
     public static List<Integer> getDyeColors(List<? extends String> list) {
-        return list.stream().map(value -> DyeColor.byTranslationKey(value, null)).filter(Objects::nonNull).map(DyeColor::getFireworkColor).collect(Collectors.toList());
+        return list.stream().map(value -> DyeColor.byName(value, null)).filter(Objects::nonNull).map(DyeColor::getFireworkColor).collect(Collectors.toList());
     }
 
     public static CompoundNBT deserializeNBT(String json) {
         try {
-            return JsonToNBT.getTagFromJson(json);
+            return JsonToNBT.parseTag(json);
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
             return new CompoundNBT();

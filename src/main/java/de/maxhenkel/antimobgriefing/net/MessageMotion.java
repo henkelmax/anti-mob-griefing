@@ -31,7 +31,7 @@ public class MessageMotion implements Message<MessageMotion> {
 
     @OnlyIn(Dist.CLIENT)
     private void execute() {
-        Minecraft.getInstance().player.setMotion(motion);
+        Minecraft.getInstance().player.setDeltaMovement(motion);
     }
 
     @Override

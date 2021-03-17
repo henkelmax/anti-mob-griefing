@@ -40,14 +40,14 @@ public class MessageSpawnFireworks implements Message<MessageSpawnFireworks> {
 
         CompoundNBT explosion = new CompoundNBT();
         FireworkRocketItem.Shape shape = FireworkRocketItem.Shape.SMALL_BALL;
-        explosion.putByte("Type", (byte) shape.getIndex());
+        explosion.putByte("Type", (byte) shape.getId());
         explosion.putIntArray("Colors", Main.SERVER_CONFIG.creeperColors);
         explosion.putBoolean("Flicker", true);
         explosions.add(explosion);
 
         compound.putByte("Flight", (byte) 1);
         compound.put("Explosions", explosions);
-        Minecraft.getInstance().world.makeFireworks(pos.x, pos.y, pos.z, 0D, 0D, 0D, compound);
+        Minecraft.getInstance().level.createFireworks(pos.x, pos.y, pos.z, 0D, 0D, 0D, compound);
     }
 
     @Override
