@@ -22,9 +22,15 @@ import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.network.NetworkDirection;
 
+import java.lang.reflect.Field;
+
 public class Griefing {
+
+    private static final Field CREEPER_SWELL = ObfuscationReflectionHelper.findField(CreeperEntity.class, "field_70833_d");
+    private static final Field CREEPER_MAX_SWELL = ObfuscationReflectionHelper.findField(CreeperEntity.class, "field_82225_f");
 
     @SubscribeEvent
     public void onWitherRosePlace(WitherRosePlaceEvent event) {
@@ -91,6 +97,15 @@ public class Griefing {
     }
 
     private void onCreeperGrief(EntityMobGriefingEvent event, CreeperEntity creeper) {
+        try {
+            if ((int) CREEPER_SWELL.get(creeper) < (int) CREEPER_MAX_SWELL.get(creeper)) {
+                return;
+            }
+        } catch (Exception e) {
+            event.setResult(Event.Result.DENY);
+            return;
+        }
+
         if (Main.SERVER_CONFIG.disableCreeperExplosionBlockDamage.get()) {
             event.setResult(Event.Result.DENY);
         }

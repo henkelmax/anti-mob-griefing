@@ -1,1 +1,1 @@
-- Updated to official mappings
+- Fixed incompatibility with OptiFine
