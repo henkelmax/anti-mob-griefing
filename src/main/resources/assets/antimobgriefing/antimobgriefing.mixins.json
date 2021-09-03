@@ -7,7 +7,8 @@
   "mixins": [
     "LivingEntityMixin",
     "TurtleEggMixin",
-    "BreakBlockGoalMixin"
+    "BreakBlockGoalMixin",
+    "FireballEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

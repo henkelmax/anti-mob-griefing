@@ -1,1 +1,1 @@
-- Fixed incompatibility with OptiFine
+- Fixed deflected ghast fireballs causing block damage
