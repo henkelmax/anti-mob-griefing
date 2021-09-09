@@ -21,7 +21,7 @@ creeper.disable_damage | `false` | Disable Creeper damage
 creeper.disable_explosion_block_damage | `true` | Disable Creeper block griefing
 creeper.lingering_effects.enabled | `false` | If creepers should spawn a lingering effect cloud upon exploding
 creeper.lingering_effects.effects | `["{Duration:200,Id:9b,Amplifier:1b}"]` | The potion effects that the creeper spawns upon exploding
-creeper.firework.enabled | `false` | Disable crop trampling
+creeper.firework.enabled | `false` | If a creeper should spawn firework when exploding
 creeper.firework.colors | `["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]` | The colors that the firework contains
 creeper.knockback.enabled | `false` | If players should be knocked back when a Creeper explodes
 creeper.knockback.factor | `2.5` | The amount of speed applied to the player when knocked back
