@@ -4,33 +4,27 @@ import de.maxhenkel.antimobgriefing.events.EggTrampleEvent;
 import de.maxhenkel.antimobgriefing.events.WitherRosePlaceEvent;
 import de.maxhenkel.antimobgriefing.net.MessageMotion;
 import de.maxhenkel.antimobgriefing.net.MessageSpawnFireworks;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.boss.WitherEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.monster.*;
-import net.minecraft.entity.passive.FoxEntity;
-import net.minecraft.entity.passive.RabbitEntity;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.passive.SnowGolemEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityMobGriefingEvent;
 import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.network.NetworkDirection;
-
-import java.lang.reflect.Field;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
 
 public class Griefing {
-
-    private static final Field CREEPER_SWELL = ObfuscationReflectionHelper.findField(CreeperEntity.class, "field_70833_d");
-    private static final Field CREEPER_MAX_SWELL = ObfuscationReflectionHelper.findField(CreeperEntity.class, "field_82225_f");
 
     @SubscribeEvent
     public void onWitherRosePlace(WitherRosePlaceEvent event) {
@@ -49,38 +43,38 @@ public class Griefing {
     @SubscribeEvent
     public void onGriefing(EntityMobGriefingEvent event) {
         Entity entity = event.getEntity();
-        if (entity instanceof CreeperEntity) {
-            onCreeperGrief(event, (CreeperEntity) entity);
-        } else if (entity instanceof WitherEntity) {
-            onWitherGrief(event, (WitherEntity) entity);
-        } else if (entity instanceof EndermanEntity) {
-            onEndermanGrief(event, (EndermanEntity) entity);
-        } else if (entity instanceof RavagerEntity) {
-            onRavagerGrief(event, (RavagerEntity) entity);
-        } else if (entity instanceof SilverfishEntity) {
-            onSilverfishGrief(event, (SilverfishEntity) entity);
-        } else if (entity instanceof FoxEntity) {
-            onFoxGrief(event, (FoxEntity) entity);
-        } else if (entity instanceof RabbitEntity) {
-            onRabbitGrief(event, (RabbitEntity) entity);
-        } else if (entity instanceof SnowGolemEntity) {
-            onSnowGolemGrief(event, (SnowGolemEntity) entity);
-        } else if (entity instanceof BlazeEntity) {
-            onBlazeGrief(event, (BlazeEntity) entity);
-        } else if (entity instanceof GhastEntity) {
-            onGhastGrief(event, (GhastEntity) entity);
-        } else if (entity instanceof VillagerEntity) {
-            onVillagerGrief(event, (VillagerEntity) entity);
-        } else if (entity instanceof SheepEntity) {
-            onSheepGrief(event, (SheepEntity) entity);
-        } else if (entity instanceof EvokerEntity) {
-            onEvokerGrief(event, (EvokerEntity) entity);
+        if (entity instanceof Creeper creeper) {
+            onCreeperGrief(event, creeper);
+        } else if (entity instanceof WitherBoss wither) {
+            onWitherGrief(event, wither);
+        } else if (entity instanceof EnderMan enderman) {
+            onEndermanGrief(event, enderman);
+        } else if (entity instanceof Ravager ravager) {
+            onRavagerGrief(event, ravager);
+        } else if (entity instanceof Silverfish silverfish) {
+            onSilverfishGrief(event, silverfish);
+        } else if (entity instanceof Fox fox) {
+            onFoxGrief(event, fox);
+        } else if (entity instanceof Rabbit rabbit) {
+            onRabbitGrief(event, rabbit);
+        } else if (entity instanceof SnowGolem snowGolem) {
+            onSnowGolemGrief(event, snowGolem);
+        } else if (entity instanceof Blaze blaze) {
+            onBlazeGrief(event, blaze);
+        } else if (entity instanceof Ghast ghast) {
+            onGhastGrief(event, ghast);
+        } else if (entity instanceof Villager villager) {
+            onVillagerGrief(event, villager);
+        } else if (entity instanceof Sheep sheep) {
+            onSheepGrief(event, sheep);
+        } else if (entity instanceof Evoker evoker) {
+            onEvokerGrief(event, evoker);
         }
     }
 
     @SubscribeEvent
     public void onBlockBreak(LivingDestroyBlockEvent event) {
-        if (event.getEntity() instanceof ZombieEntity) {
+        if (event.getEntity() instanceof Zombie) {
             if (event.getState().getBlock() instanceof DoorBlock) {
                 if (Main.SERVER_CONFIG.disableZombieDoorBreaking.get()) {
                     event.setCanceled(true);
@@ -96,9 +90,9 @@ public class Griefing {
         }
     }
 
-    private void onCreeperGrief(EntityMobGriefingEvent event, CreeperEntity creeper) {
+    private void onCreeperGrief(EntityMobGriefingEvent event, Creeper creeper) {
         try {
-            if ((int) CREEPER_SWELL.get(creeper) < (int) CREEPER_MAX_SWELL.get(creeper)) {
+            if (creeper.swell < creeper.maxSwell) {
                 return;
             }
         } catch (Exception e) {
@@ -111,16 +105,16 @@ public class Griefing {
         }
 
         if (Main.SERVER_CONFIG.disableCreeperDamage.get()) {
-            CompoundNBT compoundNBT = new CompoundNBT();
+            CompoundTag compoundNBT = new CompoundTag();
             creeper.addAdditionalSaveData(compoundNBT);
             compoundNBT.putByte("ExplosionRadius", (byte) 0);
             creeper.readAdditionalSaveData(compoundNBT);
         }
 
         if (Main.SERVER_CONFIG.creeperFirework.get()) {
-            if (creeper.level instanceof ServerWorld) {
-                ServerWorld world = (ServerWorld) creeper.level;
-                Vector3d pos = creeper.position().add(0D, creeper.getEyeHeight(), 0D);
+            if (creeper.level instanceof ServerLevel) {
+                ServerLevel world = (ServerLevel) creeper.level;
+                Vec3 pos = creeper.position().add(0D, creeper.getEyeHeight(), 0D);
                 MessageSpawnFireworks msg = new MessageSpawnFireworks(pos);
 
                 world.getPlayers(serverPlayerEntity -> Math.sqrt(serverPlayerEntity.distanceToSqr(pos)) < 128D).stream().forEach(serverPlayerEntity -> {
@@ -134,84 +128,84 @@ public class Griefing {
         }
 
         if (Main.SERVER_CONFIG.creeperKnockback.get()) {
-            creeper.level.getEntitiesOfClass(ServerPlayerEntity.class, creeper.getBoundingBox().inflate(4D)).stream().forEach(player -> {
-                if (player.abilities.flying) {
+            creeper.level.getEntitiesOfClass(ServerPlayer.class, creeper.getBoundingBox().inflate(4D)).stream().forEach(player -> {
+                if (player.getAbilities().flying) {
                     return;
                 }
-                Vector3d motionVec = player.position().subtract(creeper.position()).normalize().scale(Main.SERVER_CONFIG.creeperKnockbackFactor.get()).add(player.getDeltaMovement()).add(0D, 0.25D, 0D);
+                Vec3 motionVec = player.position().subtract(creeper.position()).normalize().scale(Main.SERVER_CONFIG.creeperKnockbackFactor.get()).add(player.getDeltaMovement()).add(0D, 0.25D, 0D);
                 Main.SIMPLE_CHANNEL.sendTo(new MessageMotion(motionVec), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
                 player.setDeltaMovement(motionVec);
             });
         }
     }
 
-    private void onWitherGrief(EntityMobGriefingEvent event, WitherEntity entity) {
+    private void onWitherGrief(EntityMobGriefingEvent event, WitherBoss entity) {
         if (Main.SERVER_CONFIG.disableWitherBlockDamage.get()) {
             event.setResult(Event.Result.DENY);
         }
     }
 
-    private void onEndermanGrief(EntityMobGriefingEvent event, EndermanEntity entity) {
+    private void onEndermanGrief(EntityMobGriefingEvent event, EnderMan entity) {
         if (Main.SERVER_CONFIG.disableEndermenBlockPickup.get()) {
             event.setResult(Event.Result.DENY);
         }
     }
 
-    private void onRavagerGrief(EntityMobGriefingEvent event, RavagerEntity entity) {
+    private void onRavagerGrief(EntityMobGriefingEvent event, Ravager entity) {
         if (Main.SERVER_CONFIG.disableRavagerBlockBreaking.get()) {
             event.setResult(Event.Result.DENY);
         }
     }
 
-    private void onSilverfishGrief(EntityMobGriefingEvent event, SilverfishEntity entity) {
+    private void onSilverfishGrief(EntityMobGriefingEvent event, Silverfish entity) {
         if (Main.SERVER_CONFIG.disableSilverfishBlockMerging.get()) {
             event.setResult(Event.Result.DENY);
         }
     }
 
-    private void onFoxGrief(EntityMobGriefingEvent event, FoxEntity entity) {
+    private void onFoxGrief(EntityMobGriefingEvent event, Fox entity) {
         if (Main.SERVER_CONFIG.disableFoxBerryHarvesting.get()) {
             event.setResult(Event.Result.DENY);
         }
     }
 
-    private void onRabbitGrief(EntityMobGriefingEvent event, RabbitEntity entity) {
+    private void onRabbitGrief(EntityMobGriefingEvent event, Rabbit entity) {
         if (Main.SERVER_CONFIG.disableRabbitCarrotHarvesting.get()) {
             event.setResult(Event.Result.DENY);
         }
     }
 
-    private void onSnowGolemGrief(EntityMobGriefingEvent event, SnowGolemEntity entity) {
+    private void onSnowGolemGrief(EntityMobGriefingEvent event, SnowGolem entity) {
         if (Main.SERVER_CONFIG.disableSnowGolemSnowPlacing.get()) {
             event.setResult(Event.Result.DENY);
         }
     }
 
-    private void onBlazeGrief(EntityMobGriefingEvent event, BlazeEntity entity) {
+    private void onBlazeGrief(EntityMobGriefingEvent event, Blaze entity) {
         if (Main.SERVER_CONFIG.disableBlazeFire.get()) {
             event.setResult(Event.Result.DENY);
         }
     }
 
-    private void onGhastGrief(EntityMobGriefingEvent event, GhastEntity entity) {
+    private void onGhastGrief(EntityMobGriefingEvent event, Ghast entity) {
         if (Main.SERVER_CONFIG.disableGhastFireballBlockDamage.get()) {
             event.setResult(Event.Result.DENY);
         }
     }
 
-    private void onVillagerGrief(EntityMobGriefingEvent event, VillagerEntity entity) {
+    private void onVillagerGrief(EntityMobGriefingEvent event, Villager entity) {
         if (Main.SERVER_CONFIG.disableVillagerCropFariming.get()) {
             event.setResult(Event.Result.DENY);
         }
     }
 
-    private void onSheepGrief(EntityMobGriefingEvent event, SheepEntity entity) {
+    private void onSheepGrief(EntityMobGriefingEvent event, Sheep entity) {
         if (Main.SERVER_CONFIG.disableSheepGrassEating.get()) {
             event.setResult(Event.Result.DENY);
         }
     }
 
-    private void onEvokerGrief(EntityMobGriefingEvent event, EvokerEntity entity) {
+    private void onEvokerGrief(EntityMobGriefingEvent event, Evoker entity) {
         if (Main.SERVER_CONFIG.disableEvokerSheepConverting.get()) {
             event.setResult(Event.Result.DENY);
         }

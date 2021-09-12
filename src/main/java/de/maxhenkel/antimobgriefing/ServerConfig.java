@@ -2,13 +2,13 @@ package de.maxhenkel.antimobgriefing;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.maxhenkel.corelib.config.ConfigBase;
-import net.minecraft.item.DyeColor;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +43,7 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.BooleanValue disableSheepGrassEating;
     public final ForgeConfigSpec.BooleanValue disableEvokerSheepConverting;
 
-    public List<EffectInstance> creeperEffects = new ArrayList<>();
+    public List<MobEffectInstance> creeperEffects = new ArrayList<>();
     public List<Integer> creeperColors = new ArrayList<>();
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
@@ -82,7 +82,7 @@ public class ServerConfig extends ConfigBase {
 
         creeperPotionEffects = builder
                 .comment("The potion effects that the creeper spawns upon exploding")
-                .defineList("creeper.lingering_effects.effects", Arrays.asList(new EffectInstance(Effects.CONFUSION, 200, 1)).stream().map(effectInstance -> effectInstance.save(new CompoundNBT()).toString()).collect(Collectors.toList()), Objects::nonNull);
+                .defineList("creeper.lingering_effects.effects", Arrays.asList(new MobEffectInstance(MobEffects.CONFUSION, 200, 1)).stream().map(effectInstance -> effectInstance.save(new CompoundTag()).toString()).collect(Collectors.toList()), Objects::nonNull);
 
         creeperKnockback = builder
                 .comment("If players should be knocked back when a Creeper explodes")
@@ -146,27 +146,27 @@ public class ServerConfig extends ConfigBase {
     }
 
     @Override
-    public void onReload(ModConfig.ModConfigEvent event) {
+    public void onReload(ModConfigEvent event) {
         super.onReload(event);
 
         creeperEffects = getEffects(creeperPotionEffects.get());
         creeperColors = getDyeColors(creeperFireworkColors.get());
     }
 
-    public static List<EffectInstance> getEffects(List<? extends String> list) {
-        return list.stream().map(s -> EffectInstance.load(deserializeNBT(s))).collect(Collectors.toList());
+    public static List<MobEffectInstance> getEffects(List<? extends String> list) {
+        return list.stream().map(s -> MobEffectInstance.load(deserializeNBT(s))).collect(Collectors.toList());
     }
 
     public static List<Integer> getDyeColors(List<? extends String> list) {
         return list.stream().map(value -> DyeColor.byName(value, null)).filter(Objects::nonNull).map(DyeColor::getFireworkColor).collect(Collectors.toList());
     }
 
-    public static CompoundNBT deserializeNBT(String json) {
+    public static CompoundTag deserializeNBT(String json) {
         try {
-            return JsonToNBT.parseTag(json);
+            return TagParser.parseTag(json);
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
-            return new CompoundNBT();
+            return new CompoundTag();
         }
     }
 

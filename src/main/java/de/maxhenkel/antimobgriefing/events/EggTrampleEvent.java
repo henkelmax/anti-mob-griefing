@@ -1,20 +1,20 @@
 package de.maxhenkel.antimobgriefing.events;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.Event;
 
 public class EggTrampleEvent extends Event {
 
-    private World world;
+    private Level world;
     private Entity trampler;
 
-    public EggTrampleEvent(World world, Entity trampler) {
+    public EggTrampleEvent(Level world, Entity trampler) {
         this.world = world;
         this.trampler = trampler;
     }
 
-    public World getWorld() {
+    public Level getWorld() {
         return world;
     }
 

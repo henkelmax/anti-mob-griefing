@@ -1,11 +1,11 @@
 package de.maxhenkel.antimobgriefing.mixins;
 
 import de.maxhenkel.antimobgriefing.events.WitherRosePlaceEvent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.boss.WitherEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,16 +17,16 @@ import javax.annotation.Nullable;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 
-    public LivingEntityMixin(EntityType<?> entityTypeIn, World worldIn) {
+    public LivingEntityMixin(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     @Inject(method = "createWitherRose", at = @At("HEAD"), cancellable = true)
     public void createWitherRose(@Nullable LivingEntity entity, CallbackInfo info) {
-        if (!(entity instanceof WitherEntity)) {
+        if (!(entity instanceof WitherBoss)) {
             return;
         }
-        WitherRosePlaceEvent event = new WitherRosePlaceEvent(level, blockPosition(), (WitherEntity) entity);
+        WitherRosePlaceEvent event = new WitherRosePlaceEvent(level, blockPosition(), (WitherBoss) entity);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             info.cancel();

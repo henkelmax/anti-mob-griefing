@@ -3,20 +3,20 @@ package de.maxhenkel.antimobgriefing.net;
 import de.maxhenkel.antimobgriefing.Main;
 import de.maxhenkel.corelib.net.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.FireworkRocketItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class MessageSpawnFireworks implements Message<MessageSpawnFireworks> {
 
-    private Vector3d pos;
+    private Vec3 pos;
 
-    public MessageSpawnFireworks(Vector3d pos) {
+    public MessageSpawnFireworks(Vec3 pos) {
         this.pos = pos;
     }
 
@@ -35,10 +35,10 @@ public class MessageSpawnFireworks implements Message<MessageSpawnFireworks> {
 
     @OnlyIn(Dist.CLIENT)
     private void execute() {
-        CompoundNBT compound = new CompoundNBT();
-        ListNBT explosions = new ListNBT();
+        CompoundTag compound = new CompoundTag();
+        ListTag explosions = new ListTag();
 
-        CompoundNBT explosion = new CompoundNBT();
+        CompoundTag explosion = new CompoundTag();
         FireworkRocketItem.Shape shape = FireworkRocketItem.Shape.SMALL_BALL;
         explosion.putByte("Type", (byte) shape.getId());
         explosion.putIntArray("Colors", Main.SERVER_CONFIG.creeperColors);
@@ -51,13 +51,13 @@ public class MessageSpawnFireworks implements Message<MessageSpawnFireworks> {
     }
 
     @Override
-    public MessageSpawnFireworks fromBytes(PacketBuffer buf) {
-        pos = new Vector3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+    public MessageSpawnFireworks fromBytes(FriendlyByteBuf buf) {
+        pos = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         return this;
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeDouble(pos.x);
         buf.writeDouble(pos.y);
         buf.writeDouble(pos.z);

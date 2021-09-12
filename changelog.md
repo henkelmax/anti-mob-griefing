@@ -1,1 +1,1 @@
-- Fixed deflected ghast fireballs causing block damage
+- Updated to 1.17.1

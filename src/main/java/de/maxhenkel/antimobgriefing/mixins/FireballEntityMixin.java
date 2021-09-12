@@ -1,30 +1,30 @@
 package de.maxhenkel.antimobgriefing.mixins;
 
 import de.maxhenkel.antimobgriefing.Main;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.AbstractFireballEntity;
-import net.minecraft.entity.projectile.FireballEntity;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.Fireball;
+import net.minecraft.world.entity.projectile.LargeFireball;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(FireballEntity.class)
-public abstract class FireballEntityMixin extends AbstractFireballEntity {
+@Mixin(LargeFireball.class)
+public abstract class FireballEntityMixin extends Fireball {
 
     @Shadow
-    public int explosionPower;
+    private int explosionPower;
 
-    public FireballEntityMixin(EntityType<? extends AbstractFireballEntity> type, World level) {
-        super(type, level);
+    public FireballEntityMixin(EntityType<? extends Fireball> p_37006_, Level p_37007_) {
+        super(p_37006_, p_37007_);
     }
 
     @Inject(method = "onHit", at = @At("HEAD"), cancellable = true)
-    public void createWitherRose(RayTraceResult result, CallbackInfo info) {
+    public void createWitherRose(HitResult result, CallbackInfo info) {
         if (level.isClientSide) {
             return;
         }
@@ -32,8 +32,8 @@ public abstract class FireballEntityMixin extends AbstractFireballEntity {
             return;
         }
         info.cancel();
-        level.explode(null, getX(), getY(), getZ(), (float) this.explosionPower, false, Explosion.Mode.NONE);
-        remove();
+        level.explode(null, getX(), getY(), getZ(), (float) this.explosionPower, false, Explosion.BlockInteraction.NONE);
+        discard();
     }
 
 }

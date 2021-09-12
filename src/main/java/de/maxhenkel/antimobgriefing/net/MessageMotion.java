@@ -2,17 +2,17 @@ package de.maxhenkel.antimobgriefing.net;
 
 import de.maxhenkel.corelib.net.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class MessageMotion implements Message<MessageMotion> {
 
-    private Vector3d motion;
+    private Vec3 motion;
 
-    public MessageMotion(Vector3d motion) {
+    public MessageMotion(Vec3 motion) {
         this.motion = motion;
     }
 
@@ -35,13 +35,13 @@ public class MessageMotion implements Message<MessageMotion> {
     }
 
     @Override
-    public MessageMotion fromBytes(PacketBuffer buf) {
-        motion = new Vector3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+    public MessageMotion fromBytes(FriendlyByteBuf buf) {
+        motion = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         return this;
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeDouble(motion.x);
         buf.writeDouble(motion.y);
         buf.writeDouble(motion.z);

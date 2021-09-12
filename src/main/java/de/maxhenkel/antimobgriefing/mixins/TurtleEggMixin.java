@@ -1,10 +1,10 @@
 package de.maxhenkel.antimobgriefing.mixins;
 
 import de.maxhenkel.antimobgriefing.events.EggTrampleEvent;
-import net.minecraft.block.Block;
-import net.minecraft.block.TurtleEggBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.TurtleEggBlock;
 import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +19,7 @@ public abstract class TurtleEggMixin extends Block {
     }
 
     @Inject(method = "canDestroyEgg", at = @At(value = "RETURN"), cancellable = true)
-    public void canTrample(World world, Entity trampler, CallbackInfoReturnable<Boolean> info) {
+    public void canTrample(Level world, Entity trampler, CallbackInfoReturnable<Boolean> info) {
         if (!info.getReturnValue()) {
             return;
         }

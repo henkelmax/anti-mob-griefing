@@ -1,23 +1,23 @@
 package de.maxhenkel.antimobgriefing.events;
 
-import net.minecraft.entity.boss.WitherEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.Event;
 
 public class WitherRosePlaceEvent extends Event {
 
-    private World world;
+    private Level world;
     private BlockPos pos;
-    private WitherEntity wither;
+    private WitherBoss wither;
 
-    public WitherRosePlaceEvent(World world, BlockPos pos, WitherEntity wither) {
+    public WitherRosePlaceEvent(Level world, BlockPos pos, WitherBoss wither) {
         this.world = world;
         this.pos = pos;
         this.wither = wither;
     }
 
-    public World getWorld() {
+    public Level getWorld() {
         return world;
     }
 
@@ -25,7 +25,7 @@ public class WitherRosePlaceEvent extends Event {
         return pos;
     }
 
-    public WitherEntity getWither() {
+    public WitherBoss getWither() {
         return wither;
     }
 
