@@ -10,7 +10,7 @@ import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 public class MessageSpawnFireworks implements Message<MessageSpawnFireworks> {
 

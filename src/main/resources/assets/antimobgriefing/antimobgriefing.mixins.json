@@ -1,9 +1,9 @@
 {
   "required": true,
   "package": "de.maxhenkel.antimobgriefing.mixins",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_17",
   "refmap": "antimobgriefing.refmap.json",
-  "minVersion": "0.8",
+  "minVersion": "0.8.4",
   "mixins": [
     "LivingEntityMixin",
     "TurtleEggMixin",
