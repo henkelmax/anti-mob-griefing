@@ -1,1 +1,1 @@
-- Fixed wrong forge version requirement
+- Updated to 1.18.2
