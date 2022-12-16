@@ -2,10 +2,6 @@
 
 ## Links
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/anti-mob-griefing)
-- [ModRepo](https://modrepo.de/minecraft/antimobgriefing/overview)
-- [GitHub](https://github.com/henkelmax/anti-mob-griefing)
-- [FAQ](https://modrepo.de/minecraft/antimobgriefing/faq)
-- [Credits](https://modrepo.de/minecraft/antimobgriefing/credits)
 
 ---
 
